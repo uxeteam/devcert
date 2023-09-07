@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"math/big"
 	mrand "math/rand"
 	"os"
@@ -26,8 +25,6 @@ type CA struct {
 	Cert    *x509.Certificate
 	PrivKey *rsa.PrivateKey
 }
-
-
 
 func buildCAPaths() (crtPath, keyPath string, err error) {
 	devcertDir, err := buildDevcertDir()
@@ -73,12 +70,12 @@ func loadCA() (ca *CA, err error) {
 		return
 	}
 
-	crtBytes, err := ioutil.ReadFile(certPath)
+	crtBytes, err := os.ReadFile(certPath)
 	if err != nil {
 		return ca, nil
 	}
 
-	keyBytes, err := ioutil.ReadFile(keyPath)
+	keyBytes, err := os.ReadFile(keyPath)
 	if err != nil {
 		return ca, nil
 	}
