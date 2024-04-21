@@ -2,14 +2,14 @@
 
 devcert takes away the pain of manually creating self-signed certificates for development.
 
-------------
-
-:warning: **Note: These certificates are NOT meant to be used on any server other than your local development machine. These certificates are NOT secure and the generated certificate authority by this tool is NOT trusted by browser vendors.**
-
--------------
-
 
 ![devcert-photo](https://user-images.githubusercontent.com/489775/167084056-4cf4a8f8-ff49-4ccc-b5de-a3c110ccbd01.png)
+
+------------
+
+## Note
+
+:warning: **These certificates are NOT meant to be used on any server other than your local development machine. These certificates are NOT secure and the generated certificate authority by this tool is NOT trusted by browser vendors.**
 
 ## Installation
 
@@ -52,7 +52,6 @@ Available make commands:
 - Windows
 - Linux (Debian, Ubuntu, OpenSUSE, RHEL, CentOS, Fedora, Arch Linux)
 
-
 ## Usage
 
 ```
@@ -89,10 +88,19 @@ Certificate Info:
 ```
 ## On First Run
 
-When running the program for the first time, it will ask for running the setup process which creates the necessary directory, generate the CA and mark it as trusted.
+When running the program for the first time, it will ask to run the setup process which creates the necessary directory, generate the CA, and mark it as trusted.
 
-This is a one time process that needs to be executed before generating domain specific certificates.
+This is a one-time process that needs to be executed before generating domain-specific certificates.
 
+It will execute the following:
+
+
+1. Create the `~/.devcert` directory
+2. Create a local certificate authority (CA) used to sign other domain-specific certificates.
+3. It will mark the CA as trusted automatically.
+
+**Note: The certificate authority (CA) `.crt` and `.key` files should be left in the `~/.devcert` directory as these files will be loaded when generating a domain-specific certificate.**
+   
 Example:
 
 ```
@@ -114,20 +122,15 @@ Trusting certificate authority...
 Certificate authority (CA) marked trusted.
 ```
 
-**Note: The certificate authority (CA) `.crt` and `.key` files should be left in the `~/.devcert` directory as these files will be loaded when generating a domain specific certificate.**
-
 ## How It Works
 
 All the certificates created by devcert will be placed in the `~/.devcert` directory.
 
-Running devcert for the first time will execute the setup process which will:
+Running devcert for the first time will execute the setup process. Once the setup process is completed it will generate the domain-specific certificate. 
 
-1. Create the `~/.devcert` directory
-2. Create a local certificate authority (CA) used to sign other domain specific certificates.
-3. It will mark the CA as trusted automatically.
+You can generate as many self-signed, trusted, local certificates for development as you like, the `.crt` and `.key` files will be placed in the `~/.devcert` directory.
 
-Once the setup process is completed it will generate the domain specific certificate. You can generate as many self-signed, trusted, local certificates for development as you like, the `.crt` and `.key` files will be placed in the `~/.devcert` directory.
-
+------------
 
 ## Known Issues
 
