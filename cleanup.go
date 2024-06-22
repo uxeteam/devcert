@@ -11,7 +11,7 @@ func attemptCleanupDevcertDir() {
 		return
 	}
 
-	os.Remove(devcertDir)
+	os.RemoveAll(devcertDir)
 }
 
 // attemptCleanupCA attempts to remove the CA files. Errors are suppressed.

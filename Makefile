@@ -10,7 +10,6 @@ BUILDTIME := $(shell date +'%H:%M:%S')
 CURPATH := ${shell pwd}
 
 APP := devcert
-#APP_INPUT := ${CURPATH}/main.go
 APP_INPUT := .
 APP_OUTPUT := /usr/local/bin/${APP}
 

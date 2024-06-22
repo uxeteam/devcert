@@ -56,7 +56,6 @@ func trustDarwin(crtPath string) (err error) {
 }
 
 func trustLinux(crtPath string) (err error) {
-
 	base, err := detectLinux()
 	if err != nil {
 		err = fmt.Errorf("Trusting CA failed: %w", err)

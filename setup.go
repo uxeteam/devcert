@@ -3,9 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/manifoldco/promptui"
 	"io/fs"
 	"os"
+
+	"github.com/fatih/color"
+	"github.com/manifoldco/promptui"
 )
 
 // needsSetup checks if the setup process needs to be executed.
@@ -61,31 +63,24 @@ func isValidCA() (is bool, err error) {
 	return
 }
 
-// validateSetupPrompt returns a validation error if setupPrompt passes the wrong value.
-func validateSetupPrompt(input string) (err error) {
-	if input != "Y" && input != "y" && input != "n" && input != "N" {
-		err = fmt.Errorf("Invalid value")
-	}
-	return
-}
-
 // setupPrompt will ask the user to continue or not.
-func setupPrompt() (err error) {
+func setupPrompt() (ok bool, err error) {
 	prompt := promptui.Prompt{
-		Label:    "Do you want to continue? [Y/n]",
-		Validate: validateSetupPrompt,
+		Label:     "Do you want to continue?",
+		IsConfirm: true,
 	}
 
-	result, err := prompt.Run()
+	_, err = prompt.Run()
 	if err != nil {
+		if errors.Is(err, promptui.ErrAbort) {
+			err = nil
+			return
+		}
+
 		return
 	}
 
-	if result == "n" || result == "N" {
-		os.Exit(0)
-	}
-
-	return nil
+	return true, nil
 }
 
 // setup will start the setup process.
@@ -95,34 +90,49 @@ func setup() (err error) {
 		return
 	}
 
-	fmt.Printf("\ndevcert needs to execute the setup process first.")
-	fmt.Printf("\n  - It will create %s directory.", devcertDir)
+	color.Set(color.FgWhite, color.Bold)
+	fmt.Printf("devcert needs to execute the setup process first:")
+	color.Unset()
+
+	fmt.Printf("\n  - It will create the")
+
+	color.Set(color.FgCyan)
+	fmt.Printf(" %s ", devcertDir)
+	color.Unset()
+
+	fmt.Printf("directory.")
+
 	fmt.Printf("\n  - It will create a local certificate authority (CA) to sign future certificates.")
 	fmt.Printf("\n  - It will mark the CA as trusted locally.\n")
 
-	err = setupPrompt()
+	promptOK, err := setupPrompt()
 	if err != nil {
+		return
+	}
+
+	if promptOK == false {
+		os.Exit(0)
 		return
 	}
 
 	// Continue the setup process.
 	err = createDevcertDir()
 	if err != nil {
-		err = fmt.Errorf("Setup failed: %w", err)
+		err = fmt.Errorf("setup failed: %w", err)
 		attemptCleanupDevcertDir()
 		return
 	}
 
 	err = createCA()
 	if err != nil {
-		err = fmt.Errorf("Setup failed: %w", err)
+		err = fmt.Errorf("setup failed: %w", err)
 		attemptCleanupDevcertDir()
 		return
 	}
 
 	err = trustCA()
 	if err != nil {
-		err = fmt.Errorf("Setup failed: %w", err)
+		err = fmt.Errorf("setup failed: %w", err)
 		attemptCleanupCA()
 		return
 	}
@@ -136,30 +146,43 @@ func createDevcertDir() (err error) {
 
 	devcertDir, err := buildDevcertDir()
 	if err != nil {
-		err = fmt.Errorf("Creating .devcert directory failed: %w", err)
+		err = fmt.Errorf("creating .devcert directory failed: %w", err)
 		return
 	}
 
 	isDevcertDir, err := isDevcertFolder()
 	if err != nil {
-		err = fmt.Errorf("Creating .devcert directory failed: %w", err)
+		err = fmt.Errorf("creating .devcert directory failed: %w", err)
 		return
 	}
 
 	// The directory already exists.
 	if isDevcertDir == true {
-		fmt.Printf("Directory %s already created.\n", devcertDir)
+		fmt.Printf("Directory")
+
+		color.Set(color.FgCyan)
+		fmt.Printf(" %s ", devcertDir)
+		color.Unset()
+
+		fmt.Printf("is already created.\n")
+
 		return
 	}
 
 	// Create the directory
 	err = os.MkdirAll(devcertDir, 0755)
 	if err != nil {
-		fmt.Errorf("Creating .devcert directory failed: %w", err)
+		err = fmt.Errorf("creating .devcert directory failed: %w", err)
 		return
 	}
 
-	fmt.Printf("Directory %s created.\n", devcertDir)
+	fmt.Printf("Directory")
+
+	color.Set(color.FgCyan)
+	fmt.Printf(" %s ", devcertDir)
+	color.Unset()
+
+	fmt.Printf("created.\n")
 
 	return
 }

@@ -1,13 +1,12 @@
-# Development Certificates Generator
+<h1 align="center">Development Certificates Generator</h1>
 
-devcert takes away the pain of manually creating self-signed certificates for development.
+<div align="center">devcert takes away the pain of manually creating self-signed certificates for development.</div>
 
 ------------
 
 :warning: **Note: These certificates are NOT meant to be used on any server other than your local development machine. These certificates are NOT secure and the generated certificate authority by this tool is NOT trusted by browser vendors.**
 
--------------
-
+------------
 
 ![devcert-photo](https://user-images.githubusercontent.com/489775/167084056-4cf4a8f8-ff49-4ccc-b5de-a3c110ccbd01.png)
 
@@ -19,15 +18,13 @@ OR
 
 Clone this repo and compile from source using Go.
 
+------------
+
 ### Install a pre-built binary
 
-1. Download the binary for your platform, example macOS ARM:
-```
-curl --location https://github.com/primalskill/devcert/releases/download/v1.2.0/devcert_darwin_arm64 --output /usr/local/bin/devcert
-```
+1. Download the binary for your platform, for example **macOS ARM**: `curl --location https://github.com/primalskill/devcert/releases/download/v1.3.0/devcert_darwin_arm64 --output /usr/local/bin/devcert`
 2. Make it an executable: `chmod u+x /usr/local/bin/devcert`
 3. Generate a certificate for a local domain (see the detailed usage below): `devcert example.test`
-
 
 ### Compile from Source
 
@@ -50,12 +47,11 @@ Available make commands:
 
 - macOS
 - Windows
-- Linux (Debian, Ubuntu, OpenSUSE, RHEL, CentOS, Fedora, Arch Linux)
-
+- Linux (Debian, Ubuntu, OpenSUSE, RHEL, Fedora, Arch Linux)
 
 ## Usage
 
-```
+```shell
 $ devcert my-project.local api.my-project.local my-other-project.test
 
 Generating certificate...
@@ -75,7 +71,7 @@ You can move the `.crt` and `.key` files to your desired location. It will be si
 
 You can get information on a crt file by executing the following command.
 
-```
+```shell
 $ devcert info path/to/crt/file.crt
 
 Certificate Info:
@@ -87,6 +83,7 @@ Certificate Info:
   - Version: 3
   - Valid Until: 2024-06-16 11:08:30 +0000 UTC
 ```
+
 ## On First Run
 
 When running the program for the first time, it will ask for running the setup process which creates the necessary directory, generate the CA and mark it as trusted.
@@ -95,7 +92,7 @@ This is a one time process that needs to be executed before generating domain sp
 
 Example:
 
-```
+```shell
 $ devcert myapp.local
 
 devcert needs to execute the setup process first.
@@ -128,6 +125,21 @@ Running devcert for the first time will execute the setup process which will:
 
 Once the setup process is completed it will generate the domain specific certificate. You can generate as many self-signed, trusted, local certificates for development as you like, the `.crt` and `.key` files will be placed in the `~/.devcert` directory.
 
+## Uninstall
+
+```shell
+$ devcert uninstall
+
+The uninstall command will:
+  - Remove the ~/.devcert/ directory and all the files in it.
+  - Remove the /usr/local/bin/devcert executable.
+  - Remove the local devcert Certificate Authority (CA).
+  
+Do you want to continue? [Y/n]: Y
+
+Removing certificate authority configuration...
+Certificate authority (CA) is uninstalled.
+```
 
 ## Known Issues
 
@@ -139,8 +151,10 @@ If you are getting this error, it's most likely Firefox preloaded a previously g
 
 1. Close all instances of Firefox
 2. Go in the profile folder
-  - Windows: `C:\Users\%userprofile%\AppData\Roaming\Mozilla\Firefox\Profiles\%profile.default%`
-  - MacOS: `~/Library/Application Support/Firefox/Profiles/<profile folder>`
+
+- Windows: `C:\Users\%userprofile%\AppData\Roaming\Mozilla\Firefox\Profiles\%profile.default%`
+- MacOS: `~/Library/Application Support/Firefox/Profiles/<profile folder>`
+
 3. Remove the files `cert8.db`, `cert9.db`, `cert_override.txt` (Note: some of these files may not exist).
 
 ### Self-signed certificate is not trusted in Xcode Simulator
@@ -156,7 +170,4 @@ _Reference_
 
 ![image](https://user-images.githubusercontent.com/489775/221010171-be029b35-ddc8-4300-b06f-dac902ac8255.png)
 
-https://developer.apple.com/library/archive/qa/qa1948/_index.html
-
-
-
+<https://developer.apple.com/library/archive/qa/qa1948/_index.html>
