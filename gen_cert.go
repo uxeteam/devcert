@@ -143,6 +143,6 @@ func generateCertificate(domains []string) (err error) {
 }
 
 func validateDomain(domain string) bool {
-	regexDomain := regexp.MustCompile(`(?i)^(?:[_a-z0-9](?:[_a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z](?:[a-z0-9-]{0,61}[a-z0-9])?)?$`)
+	regexDomain := regexp.MustCompile(`(?i)^(?:\*\.)?(?:[_a-z0-9](?:[_a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z](?:[a-z0-9-]{0,61}[a-z0-9])?)?$`)
 	return regexDomain.MatchString(domain)
 }
